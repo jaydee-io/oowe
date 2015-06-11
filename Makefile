@@ -1,4 +1,4 @@
-CXX_FLAGS="-std=c++11"
+CXX_FLAGS= -std=c++11 -Wall
 CXX=clang++
 LD=clang++
 

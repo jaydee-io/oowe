@@ -4,6 +4,7 @@
 #include <chrono>
 #include "oowe/String.h"
 #include "oowe/OutputStream.h"
+#include "oowe/InputStream.h"
 #include "oowe/Error.h"
 
 namespace oowe {
@@ -40,6 +41,7 @@ class Session
         size_t send   (const void * buffer, size_t len);
 
         // Streams
+        void setInputStream (InputStream  * stream);
         void setOutputStream(OutputStream * stream);
 
         // Informations
@@ -235,9 +237,12 @@ class Session
 
     private:
         static size_t writeCallback(char * buffer, size_t size, size_t nitems, void * user);
+        static size_t readCallback (char * buffer, size_t size, size_t nitems, void * user);
+        static int    seekCallback (void * user, curl_off_t offset, int origin);
 
     private:
         CURL *         curl;
+        InputStream *  inputStream;
         OutputStream * outputStream;
 };
 

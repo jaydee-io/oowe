@@ -3,6 +3,7 @@
 
 #include <oowe/Session.h>
 #include <oowe/StdOutputStream.h>
+#include <oowe/StdInputStream.h>
 
 namespace oowe
 {

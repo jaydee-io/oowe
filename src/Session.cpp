@@ -4,7 +4,7 @@
 namespace oowe {
 
 Session::Session(void)
-: curl(curl_easy_init()), outputStream(nullptr)
+: curl(curl_easy_init()), inputStream(nullptr), outputStream(nullptr)
 {
     if(!curl)
     {
@@ -20,14 +20,15 @@ Session::Session(const char * url)
 }
 
 Session::Session(const Session & rhs)
-: curl(curl_easy_duphandle(rhs.curl)), outputStream(rhs.outputStream)
+: curl(curl_easy_duphandle(rhs.curl)), inputStream(rhs.inputStream), outputStream(rhs.outputStream)
 {
 }
 
 Session::Session(Session && rhs)
-: curl(nullptr), outputStream(nullptr)
+: curl(nullptr), inputStream(nullptr), outputStream(nullptr)
 {
     std::swap(curl,         rhs.curl);
+    std::swap(inputStream,  rhs.inputStream );
     std::swap(outputStream, rhs.outputStream);
 }
 
@@ -45,9 +46,11 @@ Session & Session::operator =(const Session & rhs)
         {
             curl_easy_cleanup(curl);
             curl         = nullptr;
+            inputStream  = nullptr;
             outputStream = nullptr;
         }
         curl = curl_easy_duphandle(rhs.curl);
+        inputStream  = rhs.inputStream;
         outputStream = rhs.outputStream;
     }
 
@@ -62,9 +65,11 @@ Session & Session::operator =(Session && rhs)
         {
             curl_easy_cleanup(curl);
             curl         = nullptr;
+            inputStream  = nullptr;
             outputStream = nullptr;
         }
         std::swap(curl,         rhs.curl);
+        std::swap(inputStream,  rhs.inputStream);
         std::swap(outputStream, rhs.outputStream);
     }
 
@@ -144,6 +149,18 @@ size_t Session::send(const void * buffer, size_t len)
     return n;
 }
 
+void Session::setInputStream(InputStream * stream)
+{
+    curl_read_callback cbRead = stream ? Session::readCallback : nullptr;
+    curl_seek_callback cbSeek = stream ? Session::seekCallback : nullptr;
+
+    inputStream = stream;
+    set<curl_read_callback>(CURLOPT_READFUNCTION, cbRead);
+    set<void *            >(CURLOPT_READDATA,     this);
+    set<curl_seek_callback>(CURLOPT_SEEKFUNCTION, cbSeek);
+    set<void *            >(CURLOPT_SEEKDATA,     this);
+}
+
 void Session::setOutputStream(OutputStream * stream)
 {
     curl_write_callback cb = stream ? Session::writeCallback : nullptr;
@@ -169,6 +186,32 @@ size_t Session::writeCallback(char * buffer, size_t size, size_t nitems, void * 
         return 0;
 
     return session->outputStream->write(buffer, size * nitems);
+}
+
+size_t Session::readCallback(char * buffer, size_t size, size_t nitems, void * user)
+{
+    if(!user)
+        return 0;
+
+    Session * session = reinterpret_cast<Session *>(user);
+
+    if(!session->inputStream)
+        return 0;
+
+    return session->inputStream->read(buffer, size * nitems);
+}
+
+int Session::seekCallback(void * user, curl_off_t offset, int origin)
+{
+    if(!user)
+        return 0;
+
+    Session * session = reinterpret_cast<Session *>(user);
+
+    if(!session->inputStream)
+        return 0;
+
+    return session->inputStream->seek(offset, origin);
 }
 
 // Session informations

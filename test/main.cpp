@@ -16,14 +16,17 @@ std::ostream & operator << (std::ostream & os, std::chrono::time_point<Clock, Du
 
 int main(int argc, char ** argv)
 {
-    oowe::StdOutputStream<std::ofstream> devNull("/dev/null");
+    oowe::StdOutputStream<std::ofstream> output("/dev/null");
+    oowe::StdInputStream <std::ifstream> input ("README.md");
     oowe::Session session;
 
     for(int i=1 ; i<argc; i++)
     {
         session.setUrl(argv[i]);
         session.setFileTime(true);
-        session.setOutputStream(&devNull);
+        session.setOutputStream(&output);
+        session.setInputStream (&input );
+        session.setUpload(true);
         session.set<long  >(CURLOPT_FOLLOWLOCATION, true);
 
         std::cout << "***********************************************************************" << std::endl;
