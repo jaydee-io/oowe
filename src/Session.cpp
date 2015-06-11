@@ -12,7 +12,8 @@ Session::Session(void)
         // TODO Throw error
     }
 }
-Session::Session(char * url)
+
+Session::Session(const char * url)
 : Session()
 {
     setUrl(url);
@@ -65,47 +66,47 @@ Session & Session::operator =(Session && rhs)
     return *this;
 }
 
-String Session::escape(char * str, int len)
+String Session::escape(const char * str, int len)
 {
-    char * escStr = curl_easy_escape(curl, str, len);
+    const char * escStr = curl_easy_escape(curl, str, len);
 
     return String(escStr);
 }
 
 String Session::escape(const std::string & str)
 {
-    char * escStr = curl_easy_escape(curl, str.c_str(), str.size());
+    const char * escStr = curl_easy_escape(curl, str.c_str(), str.size());
 
     return String(escStr);
 }
 
 String Session::escape(const String & str)
 {
-    char * escStr = curl_easy_escape(curl, str.c_str(), str.size());
+    const char * escStr = curl_easy_escape(curl, str.c_str(), str.size());
 
     return String(escStr);
 }
 
-String Session::unescape(char * str, int len)
+String Session::unescape(const char * str, int len)
 {
-    int    unescLen = 0;
-    char * unescStr = curl_easy_unescape(curl, str, len, &unescLen);
+    int unescLen = 0;
+    const char * unescStr = curl_easy_unescape(curl, str, len, &unescLen);
 
     return String(unescStr, unescLen);
 }
 
 String Session::unescape(const std::string & str)
 {
-    int    unescLen = 0;
-    char * unescStr = curl_easy_unescape(curl, str.c_str(), str.size(), &unescLen);
+    int unescLen = 0;
+    const char * unescStr = curl_easy_unescape(curl, str.c_str(), str.size(), &unescLen);
 
     return String(unescStr, unescLen);
 }
 
 String Session::unescape(const String & str)
 {
-    int    unescLen = 0;
-    char * unescStr = curl_easy_unescape(curl, str.c_str(), str.size(), &unescLen);
+    int unescLen = 0;
+    const char * unescStr = curl_easy_unescape(curl, str.c_str(), str.size(), &unescLen);
 
     return String(unescStr, unescLen);
 }
@@ -157,7 +158,7 @@ void Session::reset(void)
     }
 
 
-GET_INFO         (getEffectiveUrl,          EFFECTIVE_URL          , char *             ,   char *             )
+GET_INFO         (getEffectiveUrl,          EFFECTIVE_URL          , const char *       ,   const char *       )
 GET_INFO         (getResponseCode,          RESPONSE_CODE          , long               ,   long               )
 GET_INFO         (getHttpConnectCode,       HTTP_CONNECTCODE       , long               ,   long               )
 GET_DURATION_INFO(getTotalTime,             TOTAL_TIME             , Session::Duration  ,   double             )
@@ -168,7 +169,7 @@ GET_DURATION_INFO(getPretransferTime,       PRETRANSFER_TIME       , Session::Du
 GET_DURATION_INFO(getStarttransferTime,     STARTTRANSFER_TIME     , Session::Duration  ,   double             )
 GET_DURATION_INFO(getRedirectTime,          REDIRECT_TIME          , Session::Duration  ,   double             )
 GET_INFO         (getRedirectCount,         REDIRECT_COUNT         , long               ,   long               )
-GET_INFO         (getRedirectUrl,           REDIRECT_URL           , char *             ,   char *             )
+GET_INFO         (getRedirectUrl,           REDIRECT_URL           , const char *       ,   const char *       )
 GET_INFO         (getSizeUpload,            SIZE_UPLOAD            , double             ,   double             )
 GET_INFO         (getSizeDownload,          SIZE_DOWNLOAD          , double             ,   double             )
 GET_INFO         (getSpeedDownload,         SPEED_DOWNLOAD         , double             ,   double             )
@@ -179,23 +180,23 @@ GET_INFO         (getSslVerifyResult,       SSL_VERIFYRESULT       , bool       
 GET_INFO         (getSslEngines,            SSL_ENGINES            , StringList         ,   struct curl_slist *)
 GET_INFO         (getContentLengthDownload, CONTENT_LENGTH_DOWNLOAD, double             ,   double             )
 GET_INFO         (getContentLengthUpload,   CONTENT_LENGTH_UPLOAD  , double             ,   double             )
-GET_INFO         (getContentType,           CONTENT_TYPE           , char *             ,   char *             )
+GET_INFO         (getContentType,           CONTENT_TYPE           , const char *       ,   const char *       )
 GET_INFO         (getPrivate,               PRIVATE                , void *             ,   void *             )
 GET_INFO         (getHttpAuthAvail,         HTTPAUTH_AVAIL         , long               ,   long               )
 GET_INFO         (getProxyAuthAvail,        PROXYAUTH_AVAIL        , long               ,   long               )
 GET_INFO         (getOsErrno,               OS_ERRNO               , long               ,   long               )
 GET_INFO         (getNumConnects,           NUM_CONNECTS           , long               ,   long               )
-GET_INFO         (getPrimaryIp,             PRIMARY_IP             , char *             ,   char *             )
+GET_INFO         (getPrimaryIp,             PRIMARY_IP             , const char *       ,   const char *       )
 GET_INFO         (getPrimaryPort,           PRIMARY_PORT           , long               ,   long               )
-GET_INFO         (getLocalIp,               LOCAL_IP               , char *             ,   char *             )
+GET_INFO         (getLocalIp,               LOCAL_IP               , const char *       ,   const char *       )
 GET_INFO         (getLocalPort,             LOCAL_PORT             , long               ,   long               )
 GET_INFO         (getCookieList,            COOKIELIST             , StringList         ,   struct curl_slist *)
 GET_INFO         (getLastSocket,            LASTSOCKET             , long               ,   long               )
-GET_INFO         (getFtpEntryPath,          FTP_ENTRY_PATH         , char *             ,   char *             )
+GET_INFO         (getFtpEntryPath,          FTP_ENTRY_PATH         , const char *       ,   const char *       )
 //GET_INFO         (getCertInfo,              CERTINFO               , CERTINFO           ,   CERTINFO  )
 //GET_INFO         (getTlsSession,            TLS_SESSION            , TLSSESSION         ,   TLSSESSION)
 GET_INFO         (getConditionUnmet,        CONDITION_UNMET        , bool               ,   bool               )
-GET_INFO         (getRtspSessionId,         RTSP_SESSION_ID        , char *             ,   char *             )
+GET_INFO         (getRtspSessionId,         RTSP_SESSION_ID        , const char *       ,   const char *       )
 GET_INFO         (getRtspClientCseq,        RTSP_CLIENT_CSEQ       , long               ,   long               )
 GET_INFO         (getRtspServerCseq,        RTSP_SERVER_CSEQ       , long               ,   long               )
 GET_INFO         (getRtspCseqRecv,          RTSP_CSEQ_RECV         , long               ,   long               )
@@ -224,67 +225,67 @@ SET_OPT(setStderr,      STDERR     , FILE *, FILE *)
 SET_OPT(setFailOnError, FAILONERROR, bool,   bool  ) // [HTTP]
 
 // Network options
-SET_OPT(setUrl,                 URL,                  char *, char *)
-SET_OPT(setDisableUrlSquashing, PATH_AS_IS,           bool  , long  )
-SET_OPT(setProtocols,           PROTOCOLS,            long  , long  )
-SET_OPT(setRedirectProtocols,   REDIR_PROTOCOLS,      long  , long  )
-SET_OPT(setProxyUrl,            PROXY,                char *, char *)
-SET_OPT(setProxyPort,           PROXYPORT,            long  , long  )
-SET_OPT(setProxyType,           PROXYTYPE,            long  , long  )
-SET_OPT(setNoProxyUrls,         NOPROXY,              char *, char *)
-SET_OPT(setProxyTunnel,         HTTPPROXYTUNNEL,      bool  , long  )
-SET_OPT(setiSocks5Name,         SOCKS5_GSSAPI_SERVICE,char *, char *)
-SET_OPT(setiSocks5Unprotected,  SOCKS5_GSSAPI_NEC,    bool  , long  )
-SET_OPT(setProxyName,           INTERFACE,            char *, char *)
-SET_OPT(setLocalPort,           LOCALPORT,            long  , long  )
-SET_OPT(setLocalPortRange,      LOCALPORTRANGE,       long  , long  )
-SET_OPT(setDnsCacheTimeout,     DNS_CACHE_TIMEOUT,    long  , long  )
-SET_OPT(setDnsUseGlobalCache,   DNS_USE_GLOBAL_CACHE, bool  , long  )
-SET_OPT(setBufferSize,          BUFFERSIZE,           long  , long  )
-SET_OPT(setDistantPort,         PORT,                 long  , long  )
-SET_OPT(setTcpNoDelay,          TCP_NODELAY,          bool  , long  )
-SET_OPT(setAddressScope,        ADDRESS_SCOPE,        long  , long  )
-SET_OPT(setTcpKeepAlive,        TCP_KEEPALIVE,        bool  , long  )
-SET_OPT(setTcpKeepIdle,         TCP_KEEPIDLE,         long  , long  )
-SET_OPT(setTcpKeepInterval,     TCP_KEEPINTVL,        long  , long  )
-SET_OPT(setUnixSocketPath,      UNIX_SOCKET_PATH,     char *, char *)
+SET_OPT(setUrl,                 URL,                  const char *, const char *)
+SET_OPT(setDisableUrlSquashing, PATH_AS_IS,           bool        , long        )
+SET_OPT(setProtocols,           PROTOCOLS,            long        , long        )
+SET_OPT(setRedirectProtocols,   REDIR_PROTOCOLS,      long        , long        )
+SET_OPT(setProxyUrl,            PROXY,                const char *, const char *)
+SET_OPT(setProxyPort,           PROXYPORT,            long        , long        )
+SET_OPT(setProxyType,           PROXYTYPE,            long        , long        )
+SET_OPT(setNoProxyUrls,         NOPROXY,              const char *, const char *)
+SET_OPT(setProxyTunnel,         HTTPPROXYTUNNEL,      bool        , long        )
+SET_OPT(setiSocks5Name,         SOCKS5_GSSAPI_SERVICE,const char *, const char *)
+SET_OPT(setiSocks5Unprotected,  SOCKS5_GSSAPI_NEC,    bool        , long        )
+SET_OPT(setProxyName,           INTERFACE,            const char *, const char *)
+SET_OPT(setLocalPort,           LOCALPORT,            long        , long        )
+SET_OPT(setLocalPortRange,      LOCALPORTRANGE,       long        , long        )
+SET_OPT(setDnsCacheTimeout,     DNS_CACHE_TIMEOUT,    long        , long        )
+SET_OPT(setDnsUseGlobalCache,   DNS_USE_GLOBAL_CACHE, bool        , long        )
+SET_OPT(setBufferSize,          BUFFERSIZE,           long        , long        )
+SET_OPT(setDistantPort,         PORT,                 long        , long        )
+SET_OPT(setTcpNoDelay,          TCP_NODELAY,          bool        , long        )
+SET_OPT(setAddressScope,        ADDRESS_SCOPE,        long        , long        )
+SET_OPT(setTcpKeepAlive,        TCP_KEEPALIVE,        bool        , long        )
+SET_OPT(setTcpKeepIdle,         TCP_KEEPIDLE,         long        , long        )
+SET_OPT(setTcpKeepInterval,     TCP_KEEPINTVL,        long        , long        )
+SET_OPT(setUnixSocketPath,      UNIX_SOCKET_PATH,     const char *, const char *)
 
 // Authentication
-SET_OPT(setNetrc,               NETRC           , long  , long  )
-SET_OPT(setNetrcFile,           NETRC_FILE      , char *, char *)
-SET_OPT(setUserPassword,        USERPWD         , char *, char *)
-SET_OPT(setProxyUserPassword,   PROXYUSERPWD    , char *, char *)
-SET_OPT(setUsername,            USERNAME        , char *, char *)
-SET_OPT(setPassword,            PASSWORD        , char *, char *)
-SET_OPT(setLoginOptions,        LOGIN_OPTIONS   , char *, char *)
-SET_OPT(setProxyUsername,       PROXYUSERNAME   , char *, char *)
-SET_OPT(setProxyPassword,       PROXYPASSWORD   , char *, char *)
-SET_OPT(setHttpAuth,            HTTPAUTH        , long  , long  ) // [HTTP]
-SET_OPT(setTlsUsername,         TLSAUTH_USERNAME, char *, char *)
-SET_OPT(setTlsPassword,         TLSAUTH_PASSWORD, char *, char *)
-SET_OPT(setTlsAuth,             TLSAUTH_TYPE    , long  , long  )
-SET_OPT(setProxyAuth,           PROXYAUTH       , long  , long  ) // [HTTP]
-SET_OPT(setSaslInitialResponse, SASL_IR         , bool  , long  )
-SET_OPT(setOAuth2BearerToken,   XOAUTH2_BEARER  , char *, char *)
+SET_OPT(setNetrc,               NETRC           , long        , long        )
+SET_OPT(setNetrcFile,           NETRC_FILE      , const char *, const char *)
+SET_OPT(setUserPassword,        USERPWD         , const char *, const char *)
+SET_OPT(setProxyUserPassword,   PROXYUSERPWD    , const char *, const char *)
+SET_OPT(setUsername,            USERNAME        , const char *, const char *)
+SET_OPT(setPassword,            PASSWORD        , const char *, const char *)
+SET_OPT(setLoginOptions,        LOGIN_OPTIONS   , const char *, const char *)
+SET_OPT(setProxyUsername,       PROXYUSERNAME   , const char *, const char *)
+SET_OPT(setProxyPassword,       PROXYPASSWORD   , const char *, const char *)
+SET_OPT(setHttpAuth,            HTTPAUTH        , long        , long        ) // [HTTP]
+SET_OPT(setTlsUsername,         TLSAUTH_USERNAME, const char *, const char *)
+SET_OPT(setTlsPassword,         TLSAUTH_PASSWORD, const char *, const char *)
+SET_OPT(setTlsAuth,             TLSAUTH_TYPE    , long        , long        )
+SET_OPT(setProxyAuth,           PROXYAUTH       , long        , long        ) // [HTTP]
+SET_OPT(setSaslInitialResponse, SASL_IR         , bool        , long        )
+SET_OPT(setOAuth2BearerToken,   XOAUTH2_BEARER  , const char *, const char *)
 
 // Protocol options
-SET_OPT(setTransferText,      TRANSFERTEXT,        bool      , long      ) // [FTP]
-SET_OPT(setProxyTransferMode, PROXY_TRANSFER_MODE, bool      , long      ) // [FTP]
-SET_OPT(setCrLf,              CRLF,                bool      , long      )
-SET_OPT(setRange,             RANGE,               char *    , char *    )
-SET_OPT(setResumeFrom,        RESUME_FROM,         long      , long      )
-SET_OPT(setResumeFromLarge,   RESUME_FROM_LARGE,   curl_off_t, curl_off_t)
-SET_OPT(setCustomRequest,     CUSTOMREQUEST,       char *    , char *    )
-SET_OPT(setFileTime,          FILETIME,            bool      , long      )
-SET_OPT(setDirListOnly,       DIRLISTONLY,         bool      , long      )
-SET_OPT(setNoBody,            NOBODY,              bool      , long      )
-SET_OPT(setInFileSize,        INFILESIZE,          long      , long      )
-SET_OPT(setInFileSizeLarge,   INFILESIZE_LARGE,    curl_off_t, curl_off_t)
-SET_OPT(setUpload,            UPLOAD,              bool      , long      )
-SET_OPT(setMaxFileSize,       MAXFILESIZE,         long      , long      )
-SET_OPT(setMaxFileSizeLarge,  MAXFILESIZE_LARGE,   curl_off_t, curl_off_t)
-SET_OPT(setTimeCondition,     TIMECONDITION,       long      , long      )
-SET_OPT(setTimeValue,         TIMEVALUE,           long      , long      )
+SET_OPT(setTransferText,      TRANSFERTEXT,        bool        , long        ) // [FTP]
+SET_OPT(setProxyTransferMode, PROXY_TRANSFER_MODE, bool        , long        ) // [FTP]
+SET_OPT(setCrLf,              CRLF,                bool        , long        )
+SET_OPT(setRange,             RANGE,               const char *, const char *)
+SET_OPT(setResumeFrom,        RESUME_FROM,         long        , long        )
+SET_OPT(setResumeFromLarge,   RESUME_FROM_LARGE,   curl_off_t  , curl_off_t  )
+SET_OPT(setCustomRequest,     CUSTOMREQUEST,       const char *, const char *)
+SET_OPT(setFileTime,          FILETIME,            bool        , long        )
+SET_OPT(setDirListOnly,       DIRLISTONLY,         bool        , long        )
+SET_OPT(setNoBody,            NOBODY,              bool        , long        )
+SET_OPT(setInFileSize,        INFILESIZE,          long        , long        )
+SET_OPT(setInFileSizeLarge,   INFILESIZE_LARGE,    curl_off_t  , curl_off_t  )
+SET_OPT(setUpload,            UPLOAD,              bool        , long        )
+SET_OPT(setMaxFileSize,       MAXFILESIZE,         long        , long        )
+SET_OPT(setMaxFileSizeLarge,  MAXFILESIZE_LARGE,   curl_off_t  , curl_off_t  )
+SET_OPT(setTimeCondition,     TIMECONDITION,       long        , long        )
+SET_OPT(setTimeValue,         TIMEVALUE,           long        , long        )
 
 // Connection options
 SET_OPT(setTimeout,              TIMEOUT,              long        , long               )
@@ -302,44 +303,44 @@ SET_OPT(setIpResolve,            IPRESOLVE,            long        , long       
 SET_OPT(setConnectOnly,          CONNECT_ONLY,         bool        , long               )
 SET_OPT(setUseLevel,             USE_SSL,              long        , long               )
 SET_OPT(setResolve,              RESOLVE,              StringList &, struct curl_slist *)
-SET_OPT(setDnsInterface,         DNS_INTERFACE,        char *      , char *             )
-SET_OPT(setDnsLocalIp4,          DNS_LOCAL_IP4,        char *      , char *             )
-SET_OPT(setDnsLocalIp6,          DNS_LOCAL_IP6,        char *      , char *             )
-SET_OPT(setDnsServers,           DNS_SERVERS,          char *      , char *             )
+SET_OPT(setDnsInterface,         DNS_INTERFACE,        const char *, const char *       )
+SET_OPT(setDnsLocalIp4,          DNS_LOCAL_IP4,        const char *, const char *       )
+SET_OPT(setDnsLocalIp6,          DNS_LOCAL_IP6,        const char *, const char *       )
+SET_OPT(setDnsServers,           DNS_SERVERS,          const char *, const char *       )
 SET_OPT(setAcceptTimeoutMillis,  ACCEPTTIMEOUT_MS,     long        , long               )
 
 // SSL & Security options
-SET_OPT(setSslCertificate,                    SSLCERT            , char *, char *)
-SET_OPT(setSslCertificateType,                SSLCERTTYPE        , char *, char *)
-SET_OPT(setSslPrivateKeyFilename,             SSLKEY             , char *, char *)
-SET_OPT(setSslPrivateKeyType,                 SSLKEYTYPE         , char *, char *)
-SET_OPT(setKeyPassword,                       KEYPASSWD          , char *, char *)
-SET_OPT(setSslEnableAlpn,                     SSL_ENABLE_ALPN    , bool  , long  ) // [HTTP]
-SET_OPT(setSslEnableNpn,                      SSL_ENABLE_NPN     , bool  , long  ) // [HTTP]
-SET_OPT(setSslEngine,                         SSLENGINE          , char *, char *)
-SET_OPT(setSslEngineDefault,                  SSLENGINE_DEFAULT  , bool  , long  )
-SET_OPT(setSslFalseStart,                     SSL_FALSESTART     , bool  , long  )
-SET_OPT(setSslVersion,                        SSLVERSION         , long  , long  )
-SET_OPT(setSslVerifyHost,                     SSL_VERIFYHOST     , long  , long  )
-SET_OPT(setSslVerifyPeer,                     SSL_VERIFYPEER     , bool  , long  )
-SET_OPT(setSslVerifyStatus,                   SSL_VERIFYSTATUS   , bool  , long  )
-SET_OPT(setCaInfo,                            CAINFO             , char *, char *)
-SET_OPT(setSslIssuerCertificateFilename,      ISSUERCERT         , char *, char *)
-SET_OPT(setCaPath,                            CAPATH             , char *, char *)
-SET_OPT(setCertificateRevocationListFilename, CRLFILE            , char *, char *)
-SET_OPT(setCertificateInfo,                   CERTINFO           , bool  , long  )
-SET_OPT(setPinnedPublicKey,                   PINNEDPUBLICKEY    , char *, char *)
-SET_OPT(setRandomFile,                        RANDOM_FILE        , char *, char *)
-SET_OPT(setEgdSocketPath,                     EGDSOCKET          , char *, char *)
-SET_OPT(setSslCipherList,                     SSL_CIPHER_LIST    , char *, char *)
-SET_OPT(setSslSessionIdCache,                 SSL_SESSIONID_CACHE, bool  , long  )
-SET_OPT(setSslOptions,                        SSL_OPTIONS        , long  , long  )
-SET_OPT(setKerberosSecurityLevel,             KRBLEVEL           , char *, char *) // [FTP]
-SET_OPT(setGssApiDelegation,                  GSSAPI_DELEGATION  , long  , long  ) // HTTP
+SET_OPT(setSslCertificate,                    SSLCERT            , const char *, const char *)
+SET_OPT(setSslCertificateType,                SSLCERTTYPE        , const char *, const char *)
+SET_OPT(setSslPrivateKeyFilename,             SSLKEY             , const char *, const char *)
+SET_OPT(setSslPrivateKeyType,                 SSLKEYTYPE         , const char *, const char *)
+SET_OPT(setKeyPassword,                       KEYPASSWD          , const char *, const char *)
+SET_OPT(setSslEnableAlpn,                     SSL_ENABLE_ALPN    , bool        , long        ) // [HTTP]
+SET_OPT(setSslEnableNpn,                      SSL_ENABLE_NPN     , bool        , long        ) // [HTTP]
+SET_OPT(setSslEngine,                         SSLENGINE          , const char *, const char *)
+SET_OPT(setSslEngineDefault,                  SSLENGINE_DEFAULT  , bool        , long        )
+SET_OPT(setSslFalseStart,                     SSL_FALSESTART     , bool        , long        )
+SET_OPT(setSslVersion,                        SSLVERSION         , long        , long        )
+SET_OPT(setSslVerifyHost,                     SSL_VERIFYHOST     , long        , long        )
+SET_OPT(setSslVerifyPeer,                     SSL_VERIFYPEER     , bool        , long        )
+SET_OPT(setSslVerifyStatus,                   SSL_VERIFYSTATUS   , bool        , long        )
+SET_OPT(setCaInfo,                            CAINFO             , const char *, const char *)
+SET_OPT(setSslIssuerCertificateFilename,      ISSUERCERT         , const char *, const char *)
+SET_OPT(setCaPath,                            CAPATH             , const char *, const char *)
+SET_OPT(setCertificateRevocationListFilename, CRLFILE            , const char *, const char *)
+SET_OPT(setCertificateInfo,                   CERTINFO           , bool        , long        )
+SET_OPT(setPinnedPublicKey,                   PINNEDPUBLICKEY    , const char *, const char *)
+SET_OPT(setRandomFile,                        RANDOM_FILE        , const char *, const char *)
+SET_OPT(setEgdSocketPath,                     EGDSOCKET          , const char *, const char *)
+SET_OPT(setSslCipherList,                     SSL_CIPHER_LIST    , const char *, const char *)
+SET_OPT(setSslSessionIdCache,                 SSL_SESSIONID_CACHE, bool        , long        )
+SET_OPT(setSslOptions,                        SSL_OPTIONS        , long        , long        )
+SET_OPT(setKerberosSecurityLevel,             KRBLEVEL           , const char *, const char *) // [FTP]
+SET_OPT(setGssApiDelegation,                  GSSAPI_DELEGATION  , long        , long        ) // HTTP
 
 // Other options
-SET_OPT(setPrivateData,       PRIVATE            , void * , void *  )
-SET_OPT(setNewFilePerms,      NEW_FILE_PERMS     , long   , long    )
-SET_OPT(setNewDirectoryPerms, NEW_DIRECTORY_PERMS, long   , long    )
+SET_OPT(setPrivateData,       PRIVATE            , void *, void *)
+SET_OPT(setNewFilePerms,      NEW_FILE_PERMS     , long  , long  )
+SET_OPT(setNewDirectoryPerms, NEW_DIRECTORY_PERMS, long  , long  )
 
 }; /* Namespace oowe */

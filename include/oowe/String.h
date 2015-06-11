@@ -10,7 +10,7 @@ namespace oowe {
 class String
 {
     public :
-        String(char * str, int len = -1);
+        String(const char * str, int len = -1);
         ~String(void);
 
         int size(void) const;
@@ -19,8 +19,8 @@ class String
         const std::string cpp_str(void) const;
 
     private :
-        char * str;
-        int    len;
+        const char * str;
+        int len;
 };
 
 // Wrap a string list allocated by cURL

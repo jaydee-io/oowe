@@ -3,14 +3,14 @@
 
 namespace oowe {
 
-String::String(char * s, int l)
+String::String(const char * s, int l)
 : str(s), len((l != -1) ? l : strlen(s))
 {
 }
 
 String::~String(void)
 {
-    curl_free(str);
+    curl_free(const_cast<char *>(str));
 }
 
 int String::size(void) const
