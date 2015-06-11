@@ -4,7 +4,7 @@
 namespace oowe {
 
 Session::Session(void)
-: curl(curl_easy_init())
+: curl(curl_easy_init()), outputStream(nullptr)
 {
     if(!curl)
     {
@@ -20,14 +20,15 @@ Session::Session(const char * url)
 }
 
 Session::Session(const Session & rhs)
-: curl(curl_easy_duphandle(rhs.curl))
+: curl(curl_easy_duphandle(rhs.curl)), outputStream(rhs.outputStream)
 {
 }
 
 Session::Session(Session && rhs)
-: curl(nullptr)
+: curl(nullptr), outputStream(nullptr)
 {
-    std::swap(curl, rhs.curl);
+    std::swap(curl,         rhs.curl);
+    std::swap(outputStream, rhs.outputStream);
 }
 
 Session::~Session(void)
@@ -43,9 +44,11 @@ Session & Session::operator =(const Session & rhs)
         if(curl)
         {
             curl_easy_cleanup(curl);
-            curl = nullptr;
+            curl         = nullptr;
+            outputStream = nullptr;
         }
         curl = curl_easy_duphandle(rhs.curl);
+        outputStream = rhs.outputStream;
     }
 
     return *this;
@@ -58,9 +61,11 @@ Session & Session::operator =(Session && rhs)
         if(curl)
         {
             curl_easy_cleanup(curl);
-            curl = nullptr;
+            curl         = nullptr;
+            outputStream = nullptr;
         }
-        std::swap(curl, rhs.curl);
+        std::swap(curl,         rhs.curl);
+        std::swap(outputStream, rhs.outputStream);
     }
 
     return *this;
@@ -139,9 +144,31 @@ size_t Session::send(const void * buffer, size_t len)
     return n;
 }
 
+void Session::setOutputStream(OutputStream * stream)
+{
+    curl_write_callback cb = stream ? Session::writeCallback : nullptr;
+
+    outputStream = stream;
+    set<curl_write_callback>(CURLOPT_WRITEFUNCTION, cb);
+    set<void *             >(CURLOPT_WRITEDATA,     this);
+}
+
 void Session::reset(void)
 {
     curl_easy_reset(curl);
+}
+
+size_t Session::writeCallback(char * buffer, size_t size, size_t nitems, void * user)
+{
+    if(!user)
+        return 0;
+
+    Session * session = reinterpret_cast<Session *>(user);
+
+    if(!session->outputStream)
+        return 0;
+
+    return session->outputStream->write(buffer, size * nitems);
 }
 
 // Session informations

@@ -1,6 +1,7 @@
 #include <oowe/oowe.h>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 template<class Clock, class Duration = typename Clock::duration>
 std::ostream & operator << (std::ostream & os, std::chrono::time_point<Clock, Duration> point)
@@ -15,15 +16,15 @@ std::ostream & operator << (std::ostream & os, std::chrono::time_point<Clock, Du
 
 int main(int argc, char ** argv)
 {
-    FILE * devNull = fopen("/dev/null", "w+");
+    oowe::StdOutputStream<std::ofstream> devNull("/dev/null");
     oowe::Session session;
 
     for(int i=1 ; i<argc; i++)
     {
         session.setUrl(argv[i]);
         session.setFileTime(true);
+        session.setOutputStream(&devNull);
         session.set<long  >(CURLOPT_FOLLOWLOCATION, true);
-        session.set<void *>(CURLOPT_WRITEDATA,      devNull);
 
         std::cout << "***********************************************************************" << std::endl;
         std::cout << "BEGIN Fetching \"" << session.getEffectiveUrl() << '"' << std::endl;

@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 #include <chrono>
 #include "oowe/String.h"
+#include "oowe/OutputStream.h"
 #include "oowe/Error.h"
 
 namespace oowe {
@@ -37,6 +38,9 @@ class Session
         void   perform(void);
         size_t recv   (      void * buffer, size_t len);
         size_t send   (const void * buffer, size_t len);
+
+        // Streams
+        void setOutputStream(OutputStream * stream);
 
         // Informations
         template<typename Ret> Ret get(CURLINFO info);
@@ -230,7 +234,11 @@ class Session
         // Telnet options
 
     private:
-        CURL * curl;
+        static size_t writeCallback(char * buffer, size_t size, size_t nitems, void * user);
+
+    private:
+        CURL *         curl;
+        OutputStream * outputStream;
 };
 
 // Templates methods
