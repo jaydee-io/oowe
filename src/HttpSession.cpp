@@ -1,4 +1,5 @@
 #include "oowe/HttpSession.h"
+#include "oowe/HttpPost.h"
 #include <utility>
 
 namespace oowe {
@@ -45,6 +46,7 @@ SET_OPT(setPostFields,           POSTFIELDS            , const char *, const cha
 SET_OPT(setPostFieldSize,        POSTFIELDSIZE         , long        , long                  )
 SET_OPT(setPostFieldSizeLarge,   POSTFIELDSIZE_LARGE   , offset_t    , curl_off_t            )
 SET_OPT(setCopyPostFields,       COPYPOSTFIELDS        , const char *, const char *          )
+SET_OPT(setHttpPost,             HTTPPOST              , HttpPost &  , struct curl_httppost *)
 SET_OPT(setReferer,              REFERER               , const char *, const char *          )
 SET_OPT(setUserAgent,            USERAGENT             , const char *, const char *          )
 SET_OPT(setHttpHeader,           HTTPHEADER            , StringList &, struct curl_slist *   )

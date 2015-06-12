@@ -4,6 +4,8 @@
 
 namespace oowe {
 
+class HttpPost;
+
 class HttpSession : public Session
 {
     public:
@@ -38,6 +40,7 @@ class HttpSession : public Session
         void setPostFieldSize       (long         size        ); // Set the POST data is this big
         void setPostFieldSizeLarge  (offset_t     size        ); // Set the POST data is this big
         void setCopyPostFields      (const char * data        ); // Set send a POST with this data - and copy it
+        void setHttpPost            (HttpPost &   formpost    ); // Set multipart formpost HTTP POST
         void setReferer             (const char * referer     ); // Set referer: header
         void setUserAgent           (const char * ua          ); // Set user-Agent: header
         void setHttpHeader          (StringList & headers     ); // Set custom HTTP headers

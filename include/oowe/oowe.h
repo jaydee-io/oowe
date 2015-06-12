@@ -3,6 +3,7 @@
 
 #include <oowe/Session.h>
 #include <oowe/HttpSession.h>
+#include <oowe/HttpPost.h>
 #include <oowe/StdOutputStream.h>
 #include <oowe/StdInputStream.h>
 
