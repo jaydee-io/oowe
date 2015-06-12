@@ -2,6 +2,7 @@
 #define __OOWE__
 
 #include <oowe/Session.h>
+#include <oowe/HttpSession.h>
 #include <oowe/StdOutputStream.h>
 #include <oowe/StdInputStream.h>
 

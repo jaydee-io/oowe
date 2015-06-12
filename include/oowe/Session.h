@@ -72,7 +72,6 @@ class Session
         double       getContentLengthUpload  (void); // Get the specified size of the upload
         const char * getContentType          (void); // Get the content-type of the downloaded object
         void *       getPrivate              (void); // Get the pointer to the private data associated with the session
-        long         getHttpAuthAvail        (void); // Get a bitmask indicating the authentication method(s) available
         long         getProxyAuthAvail       (void); // Get a bitmask indicating the authentication method(s) available for your proxy authentication
         long         getOsErrno              (void); // Get the errno variable from a connect failure
         long         getNumConnects          (void); // Get how many new connections the session had to create to achieve the previous transfer (only the successful connects are counted)
@@ -102,13 +101,10 @@ class Session
         void setNoSignal           (bool disable);
         void setWildcardMatch      (bool enable);
 
-        // Callback options
-
         // Error options
 // TODO Handle error buffer
 //        void setErrorBuffer(const char * buffer); // Set error message buffer
         void setStderr     (FILE * stream); // Set stderr replacement stream
-        void setFailOnError(bool   enable); // Enable / disable fail on HTTP 4xx errors [HTTP]
 
         // Network options
         void setUrl                (const char * url         ); // Set URL to work on
@@ -146,11 +142,9 @@ class Session
         void setLoginOptions       (const char * options ); // Set login options
         void setProxyUsername      (const char * username); // Set proxy user name
         void setProxyPassword      (const char * pwd     ); // Set proxy password
-        void setHttpAuth           (long         auth    ); // Set HTTP server authentication methods [HTTP]
         void setTlsUsername        (const char * username); // Set TLS authentication user name
         void setTlsPassword        (const char * pwd     ); // Set TLS authentication password
         void setTlsAuth            (long         auth    ); // Set TLS authentication methods
-        void setProxyAuth          (long         auth    ); // Set HTTP proxy authentication methods [HTTP]
         void setSaslInitialResponse(bool         enable  ); // Enable / disable SASL initial response
         void setOAuth2BearerToken  (const char * token   ); // Set OAuth2 bearer token
 
@@ -201,8 +195,6 @@ class Session
         void setSslPrivateKeyFilename            (const char * keyfile); // Set client key
         void setSslPrivateKeyType                (const char * type   ); // Set client key type
         void setKeyPassword                      (const char * pwd    ); // Set client key password
-        void setSslEnableAlpn                    (bool         enable ); // Set enable use of ALPN [HTTP]
-        void setSslEnableNpn                     (bool         enable ); // Set enable use of NPN [HTTP]
         void setSslEngine                        (const char * id     ); // Set use identifier with SSL engine
         void setSslEngineDefault                 (bool         enable ); // Set default SSL engine
         void setSslFalseStart                    (bool         enable ); // Set enable TLS False Start
@@ -222,9 +214,6 @@ class Session
         void setSslSessionIdCache                (bool         enable ); // Set disable SSL session-id cache
         void setSslOptions                       (long         options); // Set control SSL behavior
         void setKerberosSecurityLevel            (const char * level  ); // Set kerberos security level [FTP]
-        void setGssApiDelegation                 (long   level        ); // Set disable GSS-API delegation [HTTP]
-        
-        // SSH options
 
         // Other options
         void setPrivateData      (void *  pointer); // Set private pointer to store
@@ -232,8 +221,6 @@ class Session
 //        void setShareObject      (Share & share  ); // Set share object to use
         void setNewFilePerms     (long    mode   ); // Set mode for creating new remote files
         void setNewDirectoryPerms(long    mode   ); // Set mode for creating new remote directories
-
-        // Telnet options
 
     private:
         static size_t writeCallback(char * buffer, size_t size, size_t nitems, void * user);

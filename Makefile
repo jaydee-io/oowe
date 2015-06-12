@@ -7,6 +7,7 @@ LD=clang++
 ##########################################
 OBJS += src/String.o
 OBJS += src/Session.o
+OBJS += src/HttpSession.o
 
 INCS += -I include
 INCS += -I $(CURL_DIR)/include

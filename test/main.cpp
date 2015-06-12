@@ -18,16 +18,17 @@ int main(int argc, char ** argv)
 {
     oowe::StdOutputStream<std::ofstream> output("/dev/null");
     oowe::StdInputStream <std::ifstream> input ("README.md");
-    oowe::Session session;
+    oowe::HttpSession session;
+
+    session.setFileTime(true);
+    session.setOutputStream(&output);
+    session.setInputStream (&input );
+    session.setUpload(true);
+    session.setFollowLocation(true);
 
     for(int i=1 ; i<argc; i++)
     {
         session.setUrl(argv[i]);
-        session.setFileTime(true);
-        session.setOutputStream(&output);
-        session.setInputStream (&input );
-        session.setUpload(true);
-        session.set<long  >(CURLOPT_FOLLOWLOCATION, true);
 
         std::cout << "***********************************************************************" << std::endl;
         std::cout << "BEGIN Fetching \"" << session.getEffectiveUrl() << '"' << std::endl;

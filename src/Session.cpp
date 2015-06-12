@@ -252,7 +252,6 @@ GET_INFO         (getContentLengthDownload, CONTENT_LENGTH_DOWNLOAD, double     
 GET_INFO         (getContentLengthUpload,   CONTENT_LENGTH_UPLOAD  , double             ,   double             )
 GET_INFO         (getContentType,           CONTENT_TYPE           , const char *       ,   const char *       )
 GET_INFO         (getPrivate,               PRIVATE                , void *             ,   void *             )
-GET_INFO         (getHttpAuthAvail,         HTTPAUTH_AVAIL         , long               ,   long               )
 GET_INFO         (getProxyAuthAvail,        PROXYAUTH_AVAIL        , long               ,   long               )
 GET_INFO         (getOsErrno,               OS_ERRNO               , long               ,   long               )
 GET_INFO         (getNumConnects,           NUM_CONNECTS           , long               ,   long               )
@@ -292,7 +291,6 @@ SET_OPT(setWildcardMatch,       WILDCARDMATCH, bool, long)
 
 // Error options
 SET_OPT(setStderr,      STDERR     , FILE *, FILE *)
-SET_OPT(setFailOnError, FAILONERROR, bool,   bool  ) // [HTTP]
 
 // Network options
 SET_OPT(setUrl,                 URL,                  const char *, const char *)
@@ -330,11 +328,9 @@ SET_OPT(setPassword,            PASSWORD        , const char *, const char *)
 SET_OPT(setLoginOptions,        LOGIN_OPTIONS   , const char *, const char *)
 SET_OPT(setProxyUsername,       PROXYUSERNAME   , const char *, const char *)
 SET_OPT(setProxyPassword,       PROXYPASSWORD   , const char *, const char *)
-SET_OPT(setHttpAuth,            HTTPAUTH        , long        , long        ) // [HTTP]
 SET_OPT(setTlsUsername,         TLSAUTH_USERNAME, const char *, const char *)
 SET_OPT(setTlsPassword,         TLSAUTH_PASSWORD, const char *, const char *)
 SET_OPT(setTlsAuth,             TLSAUTH_TYPE    , long        , long        )
-SET_OPT(setProxyAuth,           PROXYAUTH       , long        , long        ) // [HTTP]
 SET_OPT(setSaslInitialResponse, SASL_IR         , bool        , long        )
 SET_OPT(setOAuth2BearerToken,   XOAUTH2_BEARER  , const char *, const char *)
 
@@ -385,8 +381,6 @@ SET_OPT(setSslCertificateType,                SSLCERTTYPE        , const char *,
 SET_OPT(setSslPrivateKeyFilename,             SSLKEY             , const char *, const char *)
 SET_OPT(setSslPrivateKeyType,                 SSLKEYTYPE         , const char *, const char *)
 SET_OPT(setKeyPassword,                       KEYPASSWD          , const char *, const char *)
-SET_OPT(setSslEnableAlpn,                     SSL_ENABLE_ALPN    , bool        , long        ) // [HTTP]
-SET_OPT(setSslEnableNpn,                      SSL_ENABLE_NPN     , bool        , long        ) // [HTTP]
 SET_OPT(setSslEngine,                         SSLENGINE          , const char *, const char *)
 SET_OPT(setSslEngineDefault,                  SSLENGINE_DEFAULT  , bool        , long        )
 SET_OPT(setSslFalseStart,                     SSL_FALSESTART     , bool        , long        )
@@ -406,7 +400,6 @@ SET_OPT(setSslCipherList,                     SSL_CIPHER_LIST    , const char *,
 SET_OPT(setSslSessionIdCache,                 SSL_SESSIONID_CACHE, bool        , long        )
 SET_OPT(setSslOptions,                        SSL_OPTIONS        , long        , long        )
 SET_OPT(setKerberosSecurityLevel,             KRBLEVEL           , const char *, const char *) // [FTP]
-SET_OPT(setGssApiDelegation,                  GSSAPI_DELEGATION  , long        , long        ) // HTTP
 
 // Other options
 SET_OPT(setPrivateData,       PRIVATE            , void *, void *)
