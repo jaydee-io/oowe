@@ -294,7 +294,9 @@ SET_OPT(setStderr,      STDERR     , FILE *, FILE *)
 
 // Network options
 SET_OPT(setUrl,                 URL,                  const char *, const char *)
+#if CURL_VERSION_GREATER(7, 42, 0)
 SET_OPT(setDisableUrlSquashing, PATH_AS_IS,           bool        , long        )
+#endif
 SET_OPT(setProtocols,           PROTOCOLS,            long        , long        )
 SET_OPT(setRedirectProtocols,   REDIR_PROTOCOLS,      long        , long        )
 SET_OPT(setProxyUrl,            PROXY,                const char *, const char *)
@@ -316,7 +318,9 @@ SET_OPT(setAddressScope,        ADDRESS_SCOPE,        long        , long        
 SET_OPT(setTcpKeepAlive,        TCP_KEEPALIVE,        bool        , long        )
 SET_OPT(setTcpKeepIdle,         TCP_KEEPIDLE,         long        , long        )
 SET_OPT(setTcpKeepInterval,     TCP_KEEPINTVL,        long        , long        )
+#if CURL_VERSION_GREATER(7, 40, 0)
 SET_OPT(setUnixSocketPath,      UNIX_SOCKET_PATH,     const char *, const char *)
+#endif
 
 // Authentication
 SET_OPT(setNetrc,               NETRC           , long        , long        )
@@ -383,17 +387,23 @@ SET_OPT(setSslPrivateKeyType,                 SSLKEYTYPE         , const char *,
 SET_OPT(setKeyPassword,                       KEYPASSWD          , const char *, const char *)
 SET_OPT(setSslEngine,                         SSLENGINE          , const char *, const char *)
 SET_OPT(setSslEngineDefault,                  SSLENGINE_DEFAULT  , bool        , long        )
+#if CURL_VERSION_GREATER(7, 42, 0)
 SET_OPT(setSslFalseStart,                     SSL_FALSESTART     , bool        , long        )
+#endif
 SET_OPT(setSslVersion,                        SSLVERSION         , long        , long        )
 SET_OPT(setSslVerifyHost,                     SSL_VERIFYHOST     , long        , long        )
 SET_OPT(setSslVerifyPeer,                     SSL_VERIFYPEER     , bool        , long        )
+#if CURL_VERSION_GREATER(7, 41, 0)
 SET_OPT(setSslVerifyStatus,                   SSL_VERIFYSTATUS   , bool        , long        )
+#endif
 SET_OPT(setCaInfo,                            CAINFO             , const char *, const char *)
 SET_OPT(setSslIssuerCertificateFilename,      ISSUERCERT         , const char *, const char *)
 SET_OPT(setCaPath,                            CAPATH             , const char *, const char *)
 SET_OPT(setCertificateRevocationListFilename, CRLFILE            , const char *, const char *)
 SET_OPT(setCertificateInfo,                   CERTINFO           , bool        , long        )
+#if CURL_VERSION_GREATER(7, 39, 0)
 SET_OPT(setPinnedPublicKey,                   PINNEDPUBLICKEY    , const char *, const char *)
+#endif
 SET_OPT(setRandomFile,                        RANDOM_FILE        , const char *, const char *)
 SET_OPT(setEgdSocketPath,                     EGDSOCKET          , const char *, const char *)
 SET_OPT(setSslCipherList,                     SSL_CIPHER_LIST    , const char *, const char *)

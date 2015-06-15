@@ -2,6 +2,7 @@
 #define __OOWE_SESSION__
 #include <curl/curl.h>
 #include <chrono>
+#include "oowe/oowe_macros.h"
 #include "oowe/String.h"
 #include "oowe/OutputStream.h"
 #include "oowe/InputStream.h"
@@ -108,7 +109,9 @@ class Session
 
         // Network options
         void setUrl                (const char * url         ); // Set URL to work on
+#if CURL_VERSION_GREATER(7, 42, 0)
         void setDisableUrlSquashing(bool         disable     ); // Enable / disable squashing /../ and /./ sequences in the path
+#endif
         void setProtocols          (long         protos      ); // Set allowed protocols
         void setRedirectProtocols  (long         protos      ); // Set protocols to allow redirects to
         void setProxyUrl           (const char * url         ); // Set proxy to use
@@ -130,7 +133,9 @@ class Session
         void setTcpKeepAlive       (bool         enable      ); // Enable / disable TCP keep-alive
         void setTcpKeepIdle        (long         idleTime    ); // Set idle time before sending keep-alive
         void setTcpKeepInterval    (long         intervalTime); // Set interval between keep-alive probes
+#if CURL_VERSION_GREATER(7, 40, 0)
         void setUnixSocketPath     (const char * path        ); // Set path to a Unix domain socket
+#endif
 
         // Authentication options
         void setNetrc              (long         level   ); // Set enable .netrc parsing
@@ -197,17 +202,23 @@ class Session
         void setKeyPassword                      (const char * pwd    ); // Set client key password
         void setSslEngine                        (const char * id     ); // Set use identifier with SSL engine
         void setSslEngineDefault                 (bool         enable ); // Set default SSL engine
+#if CURL_VERSION_GREATER(7, 42, 0)
         void setSslFalseStart                    (bool         enable ); // Set enable TLS False Start
+#endif
         void setSslVersion                       (long         version); // Set SSL version to use
         void setSslVerifyHost                    (long         verify ); // Set verify the host name in the SSL certificate
         void setSslVerifyPeer                    (bool         verify ); // Set verify the peer's SSL certificate
+#if CURL_VERSION_GREATER(7, 41, 0)
         void setSslVerifyStatus                  (bool         verify ); // Set verify the SSL certificate's status
+#endif
         void setCaInfo                           (const char * path   ); // Set CA cert bundle
         void setSslIssuerCertificateFilename     (const char * file   ); // Set issuer certificate
         void setCaPath                           (const char * path   ); // Set path to CA cert bundle
         void setCertificateRevocationListFilename(const char * file   ); // Set certificate Revocation List
         void setCertificateInfo                  (bool         enable ); // Set extract certificate info
+#if CURL_VERSION_GREATER(7, 39, 0)
         void setPinnedPublicKey                  (const char * key    ); // Set set pinned SSL public key
+#endif
         void setRandomFile                       (const char * path   ); // Set provide source for entropy random data
         void setEgdSocketPath                    (const char * path   ); // Set identify EGD socket for entropy
         void setSslCipherList                    (const char * list   ); // Set ciphers to use
