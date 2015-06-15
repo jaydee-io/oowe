@@ -22,8 +22,8 @@ void httpPostFormNew(oowe::HttpPost & post, oowe::HttpSession & session)
     char           buffer[] = "test buffer";
     char           htmlbuffer[] = "<HTML>test buffer</HTML>";
     long           htmlbufferlength = std::strlen(htmlbuffer);
-    char file1[] = "my-face.jpg";
-    char file2[] = "your-face.jpg";
+//    char file1[] = "my-face.jpg";
+//    char file2[] = "your-face.jpg";
     /* add null character into htmlbuffer, to demonstrate that
        transfers of buffers containing null characters actually work
        */
@@ -106,8 +106,8 @@ void httpPostForm(oowe::HttpPost & post, oowe::HttpSession & session)
     char           htmlbuffer[] = "<HTML>test buffer</HTML>";
     long           htmlbufferlength = std::strlen(htmlbuffer);
 //    struct curl_forms     forms[3];
-    char file1[] = "my-face.jpg";
-    char file2[] = "your-face.jpg";
+//    char file1[] = "my-face.jpg";
+//    char file2[] = "your-face.jpg";
     /* add null character into htmlbuffer, to demonstrate that
        transfers of buffers containing null characters actually work
        */
@@ -188,7 +188,7 @@ int main(int argc, char ** argv)
         std::cout << "    File time = \"" << session.getFileTime() << '"' << std::endl;
 
 
-        std::chrono::duration<double> elapsed = end - start; 
+        std::chrono::duration<double> elapsed = end - start;
         std::cout << "    START " << start << std::endl;
         std::cout << "        |  " << std::endl << std::fixed;
         std::cout << "        |---> NAME LOOKUP                                   = " << session.getNameLookupTime()   .count() << 's' << std::endl;
