@@ -56,8 +56,8 @@ class Session
         Duration     getNameLookupTime       (void); // Get the time, in seconds, it took from the start until the name resolving was completed
         Duration     getConnectTime          (void); // Get the time, in seconds, it took from the start until the connect to the remote host (or proxy) was completed
         Duration     getAppConnectTime       (void); // Get the time, in seconds, it took from the start until the SSL/SSH connect/handshake to the remote host was completed
-        Duration     getPretransferTime      (void); // Get the time, in seconds, it took from the start until the file transfer is just about to begin
-        Duration     getStarttransferTime    (void); // Get the time, in seconds, it took from the start until the first byte is received by libcurl
+        Duration     getPreTransferTime      (void); // Get the time, in seconds, it took from the start until the file transfer is just about to begin
+        Duration     getStartTransferTime    (void); // Get the time, in seconds, it took from the start until the first byte is received by libcurl
         Duration     getRedirectTime         (void); // Get the total time, in seconds, it took for all redirection steps include name lookup, connect, pretransfer and transfer before final transaction was started
         long         getRedirectCount        (void); // Get the total number of redirections that were actually followed
         const char * getRedirectUrl          (void); // Get the URL a redirect would take you to if you would enable FOLLOWLOCATION
@@ -96,11 +96,11 @@ class Session
         void reset(void);
 
         // Behaviour options
-        void setVerbose            (bool enable);
-        void setIncludeHeaderInBody(bool enable);
-        void setNoProgress         (bool disable);
-        void setNoSignal           (bool disable);
-        void setWildcardMatch      (bool enable);
+        void setVerbose      (bool enable);  // Enable / disable display verbose information
+        void setHeader       (bool enable);  // Enable / disable include the header in the body output
+        void setNoProgress   (bool disable); // Enable / disable shut off the progress meter                             
+        void setNoSignal     (bool disable); // Enable / disable do not install signal handlers                          
+        void setWildcardMatch(bool enable);  // Enable / disable transfer multiple files according to a file name pattern
 
         // Error options
 // TODO Handle error buffer
@@ -110,24 +110,24 @@ class Session
         // Network options
         void setUrl                (const char * url         ); // Set URL to work on
 #if CURL_VERSION_GREATER(7, 42, 0)
-        void setDisableUrlSquashing(bool         disable     ); // Enable / disable squashing /../ and /./ sequences in the path
+        void setPathAsIs           (bool         disable     ); // Enable / disable squashing /../ and /./ sequences in the path
 #endif
         void setProtocols          (long         protos      ); // Set allowed protocols
-        void setRedirectProtocols  (long         protos      ); // Set protocols to allow redirects to
-        void setProxyUrl           (const char * url         ); // Set proxy to use
+        void setRedirProtocols     (long         protos      ); // Set protocols to allow redirects to
+        void setProxy              (const char * url         ); // Set proxy to use
         void setProxyPort          (long         port        ); // Set proxy port to use
         void setProxyType          (long         type        ); // Set proxy type
-        void setNoProxyUrls        (const char * urls        ); // Set filter out hosts from proxy use
-        void setProxyTunnel        (bool         enable      ); // Enable / disable tunnel through the HTTP proxy
-        void setiSocks5Name        (const char * name        ); // Set Socks5 GSSAPI service name
-        void setiSocks5Unprotected (bool         enable      ); // Enable / disable Socks5 GSSAPI NEC mode
-        void setProxyName          (const char * name        ); // Set bind connection locally to this
+        void setNoProxy            (const char * urls        ); // Set filter out hosts from proxy use
+        void setHttpProxyTunnel    (bool         enable      ); // Enable / disable tunnel through the HTTP proxy
+        void setSocks5GssApiService(const char * name        ); // Set Socks5 GSSAPI service name
+        void setSocks5GssApiNec    (bool         enable      ); // Enable / disable Socks5 GSSAPI NEC mode
+        void setInterface          (const char * name        ); // Set bind connection locally to this
         void setLocalPort          (long         port        ); // Set bind connection locally to this port
         void setLocalPortRange     (long         range       ); // Set bind connection locally to port range
         void setDnsCacheTimeout    (long         timeout     ); // Set timeout for DNS cache
         void setDnsUseGlobalCache  (bool         enable      ); // [OBSOLETE] Enable / disable global DNS cache
         void setBufferSize         (long         size        ); // Set ask for smaller buffer size
-        void setDistantPort        (long         port        ); // Set port number to connect to
+        void setPort               (long         port        ); // Set port number to connect to
         void setTcpNoDelay         (bool         enable      ); // Enable / disable the Nagle algorithm
         void setAddressScope       (long         addressScope); // Set IPv6 scope for local addresses
         void setTcpKeepAlive       (bool         enable      ); // Enable / disable TCP keep-alive
@@ -138,8 +138,8 @@ class Session
 #endif
 
         // Authentication options
-        void setNetrc              (long         level   ); // Set enable .netrc parsing
-        void setNetrcFile          (const char * file    ); // Set .netrc file name
+        void setNetRc              (long         level   ); // Set enable .netrc parsing
+        void setNetRcFile          (const char * file    ); // Set .netrc file name
         void setUserPassword       (const char * userpwd ); // Set user name and password
         void setProxyUserPassword  (const char * userpwd ); // Set proxy user name and password
         void setUsername           (const char * username); // Set user name
@@ -147,9 +147,9 @@ class Session
         void setLoginOptions       (const char * options ); // Set login options
         void setProxyUsername      (const char * username); // Set proxy user name
         void setProxyPassword      (const char * pwd     ); // Set proxy password
-        void setTlsUsername        (const char * username); // Set TLS authentication user name
-        void setTlsPassword        (const char * pwd     ); // Set TLS authentication password
-        void setTlsAuth            (long         auth    ); // Set TLS authentication methods
+        void setTlsAuthUsername    (const char * username); // Set TLS authentication user name
+        void setTlsAuthPassword    (const char * pwd     ); // Set TLS authentication password
+        void setTlsAuthType        (long         auth    ); // Set TLS authentication methods
         void setSaslInitialResponse(bool         enable  ); // Enable / disable SASL initial response
         void setOAuth2BearerToken  (const char * token   ); // Set OAuth2 bearer token
 
@@ -174,7 +174,7 @@ class Session
 
         // Connection options
         void setTimeout             (long         timeout   ); // Set timeout for the entire request
-        void setTimeoutMillis       (long         timeout   ); // Set millisecond timeout for the entire request
+        void setTimeoutMs           (long         timeout   ); // Set millisecond timeout for the entire request
         void setLowSpeedLimit       (long         speedlimit); // Set low speed limit to abort transfer
         void setLowSpeedTime        (long         speedtime ); // Set time to be below the speed to trigger low speed abort
         void setMaxSendSpeedLarge   (offset_t     maxspeed  ); // Set cap the upload speed to this
@@ -183,22 +183,22 @@ class Session
         void setFreshConnect        (bool         fresh     ); // Use a new connection
         void setForbidReuse         (bool         close     ); // Prevent subsequent connections from re-using this
         void setConnectTimeout      (long         timeout   ); // Set timeout for the connection phase
-        void setConnectTimeoutMillis(long         timeout   ); // Set millisecond timeout for the connection phase
+        void setConnectTimeoutMs    (long         timeout   ); // Set millisecond timeout for the connection phase
         void setIpResolve           (long         resolve   ); // Set IP version to resolve to
         void setConnectOnly         (bool         only      ); // Only connect, nothing else
-        void setUseLevel            (long         level     ); // Set use TLS/SSL
+        void setUseSsl              (long         level     ); // Set use TLS/SSL
         void setResolve             (StringList & hosts     ); // Set provide fixed/fake name resolves
         void setDnsInterface        (const char * ifname    ); // Set bind name resolves to this interface
         void setDnsLocalIp4         (const char * address   ); // Set bind name resolves to this IP4 address
         void setDnsLocalIp6         (const char * address   ); // Set bind name resolves to this IP6 address
         void setDnsServers          (const char * servers   ); // Set preferred DNS servers
-        void setAcceptTimeoutMillis (long         ms        ); // Set timeout for waiting for the server's connect back to be accepted
+        void setAcceptTimeoutMs     (long         ms        ); // Set timeout for waiting for the server's connect back to be accepted
 
         // SSL & Security options
         void setSslCertificate                   (const char * cert   ); // Set client cert
         void setSslCertificateType               (const char * type   ); // Set client cert type
-        void setSslPrivateKeyFilename            (const char * keyfile); // Set client key
-        void setSslPrivateKeyType                (const char * type   ); // Set client key type
+        void setSslKey                           (const char * keyfile); // Set client key
+        void setSslKeyType                       (const char * type   ); // Set client key type
         void setKeyPassword                      (const char * pwd    ); // Set client key password
         void setSslEngine                        (const char * id     ); // Set use identifier with SSL engine
         void setSslEngineDefault                 (bool         enable ); // Set default SSL engine
@@ -212,22 +212,22 @@ class Session
         void setSslVerifyStatus                  (bool         verify ); // Set verify the SSL certificate's status
 #endif
         void setCaInfo                           (const char * path   ); // Set CA cert bundle
-        void setSslIssuerCertificateFilename     (const char * file   ); // Set issuer certificate
+        void setSslIssuerCertificate             (const char * file   ); // Set issuer certificate
         void setCaPath                           (const char * path   ); // Set path to CA cert bundle
-        void setCertificateRevocationListFilename(const char * file   ); // Set certificate Revocation List
+        void setCertificateRevocationListFile    (const char * file   ); // Set certificate Revocation List
         void setCertificateInfo                  (bool         enable ); // Set extract certificate info
 #if CURL_VERSION_GREATER(7, 39, 0)
         void setPinnedPublicKey                  (const char * key    ); // Set set pinned SSL public key
 #endif
         void setRandomFile                       (const char * path   ); // Set provide source for entropy random data
-        void setEgdSocketPath                    (const char * path   ); // Set identify EGD socket for entropy
+        void setEgdSocket                        (const char * path   ); // Set identify EGD socket for entropy
         void setSslCipherList                    (const char * list   ); // Set ciphers to use
         void setSslSessionIdCache                (bool         enable ); // Set disable SSL session-id cache
         void setSslOptions                       (long         options); // Set control SSL behavior
-        void setKerberosSecurityLevel            (const char * level  ); // Set kerberos security level [FTP]
+        void setKerberosLevel                    (const char * level  ); // Set kerberos security level [FTP]
 
         // Other options
-        void setPrivateData      (void *  pointer); // Set private pointer to store
+        void setPrivate          (void *  pointer); // Set private pointer to store
 // TODO Handle share
 //        void setShareObject      (Share & share  ); // Set share object to use
         void setNewFilePerms     (long    mode   ); // Set mode for creating new remote files

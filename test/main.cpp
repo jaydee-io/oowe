@@ -194,8 +194,8 @@ int main(int argc, char ** argv)
         std::cout << "        |---> NAME LOOKUP                                   = " << session.getNameLookupTime()   .count() << 's' << std::endl;
         std::cout << "        |-----|---> CONNECT                                 = " << session.getConnectTime()      .count() << 's' << std::endl;
         std::cout << "        |-----|-----|---> APP CONNECT                       = " << session.getAppConnectTime()   .count() << 's' << std::endl;
-        std::cout << "        |-----|-----|-----|---> PRETRANSFER                 = " << session.getPretransferTime()  .count() << 's' << std::endl;
-        std::cout << "        |-----|-----|-----|-----|---> START TRANSFERT       = " << session.getStarttransferTime().count() << 's' << std::endl;
+        std::cout << "        |-----|-----|-----|---> PRETRANSFER                 = " << session.getPreTransferTime()  .count() << 's' << std::endl;
+        std::cout << "        |-----|-----|-----|-----|---> START TRANSFERT       = " << session.getStartTransferTime().count() << 's' << std::endl;
         std::cout << "        |-----|-----|-----|-----|-----|---> TOTAL           = " << session.getTotalTime()        .count() << 's' << std::endl;
         std::cout << "        |-----|-----|-----|-----|-----|---> REDIRECT TIME   = " << session.getRedirectTime()     .count() << 's' << std::endl;
         std::cout << "    END = " << end << " (" << elapsed.count() << "s)" << std::endl;
