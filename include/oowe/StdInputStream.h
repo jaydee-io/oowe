@@ -34,9 +34,9 @@ int StdInputStream<BaseStream>::seek(long long offset, int origin)
 {
     switch(origin)
     {
-        case SEEK_SET : BaseStream::seekg(offset, BaseStream::beg); break; 
-        case SEEK_CUR : BaseStream::seekg(offset, BaseStream::cur); break; 
-        case SEEK_END : BaseStream::seekg(offset, BaseStream::end); break; 
+        case SEEK_SET : BaseStream::seekg(offset, BaseStream::beg); break;
+        case SEEK_CUR : BaseStream::seekg(offset, BaseStream::cur); break;
+        case SEEK_END : BaseStream::seekg(offset, BaseStream::end); break;
     }
 
     if(BaseStream::fail())
