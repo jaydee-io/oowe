@@ -1,15 +1,21 @@
 #include <oowe/oowe.h>
 #include <list>
+#include <vector>
 #include <map>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <fstream>
 #include <cstdlib>
+#include <cerrno>
 #include <cmath>
+#include <cstring>
+#include <unistd.h>
 
 using namespace std;
 using namespace oowe;
+
+#define ITER_MODULO 10
 
 struct Site
 {
@@ -30,7 +36,6 @@ struct Stats
     int                     finalUrlMaxSize;
 };
 
-Stats stats;
 
 
 
@@ -80,7 +85,7 @@ Session::Duration operator *(Session::Duration & lhs, Session::Duration & rhs)
     return Session::Duration(lhs.count() * rhs.count());
 }
 
-void addSite(const char * initialUrl, string & finalUrl, Session::Duration & time)
+void addSite(Stats & stats, const char * initialUrl, const char * finalUrl, Session::Duration && time)
 {
     auto siteIter = stats.sites.find(initialUrl);
 
@@ -107,7 +112,7 @@ void addSite(const char * initialUrl, string & finalUrl, Session::Duration & tim
     }
 }
 
-void finalizeStatsCalculation(void)
+void finalizeStatsCalculation(Stats & stats)
 {
     for(auto & siteIter : stats.sites)
     {
@@ -118,7 +123,7 @@ void finalizeStatsCalculation(void)
 }
 
 #define DOUBLE_SIZE 21
-void printStats(void)
+void printStats(Stats & stats)
 {
     cout << endl;
     cout << setw(stats.initialUrlMaxSize) << left  << "Initial URL" << " | "
@@ -141,46 +146,212 @@ void printStats(void)
     }
 }
 
-int main(int argc, char ** argv)
+void simpleSessions(int argc, char ** argv)
 {
     StdOutputStream<ofstream> output("/dev/null");
-    HttpSession               session;
-
-    string            finalUrl;
-    Session::Duration time;
-
-    session.setOutputStream(&output);
-    session.setFollowLocation(true);
+    Stats                     stats;
 
     stats.nbRun             = atoi(argv[1]);
     stats.initialUrlMaxSize = 0;
     stats.finalUrlMaxSize   = 0;
 
+    cout << "###########################################" << endl;
+    cout << "# Easy interface"                            << endl;
+    cout << "###########################################" << endl;
+
     for(int i=2 ; i<argc; i++)
     {
-        std::cout << "Running \"" << argv[i] << '\"' << std::endl;
+        cout << "Running \"" << argv[i] << '\"' << std::endl;
 
+        HttpSession session;
+        session.setOutputStream(&output);
+        session.setFollowLocation(true);
         session.setUrl(argv[i]);
+
         for(int j=1; j<=stats.nbRun; j++)
         {
-            Site site;
-
             session.perform();
+            addSite(stats, argv[i], session.getEffectiveUrl(), session.getTotalTime());
 
-            finalUrl   = session.getEffectiveUrl();
-            time       = session.getTotalTime();
-
-            addSite(argv[i], finalUrl, time);
-
-            if((j % 10) == 0)
+            if((j % ITER_MODULO) == 0)
                 cout << j << ' ' << flush;
         }
-
         cout << endl;
     }
 
-    finalizeStatsCalculation();
-    printStats();
+    finalizeStatsCalculation(stats);
+    printStats(stats);
+    cout << endl;
+}
+
+void multipleSessionsURLs(int argc, char ** argv)
+{
+    StdOutputStream<ofstream> output("/dev/null");
+    Stats                     stats;
+
+    stats.nbRun             = atoi(argv[1]);
+    stats.initialUrlMaxSize = 0;
+    stats.finalUrlMaxSize   = 0;
+
+    cout << "###########################################" << endl;
+    cout << "# Multi interface (Parallel URL)"            << endl;
+    cout << "###########################################" << endl;
+
+    
+    MultiSession        multiSession;
+    vector<HttpSession> sessions(argc - 2);
+    for(int i=2 ; i<argc; i++)
+    {
+        sessions[i - 2].setOutputStream(&output);
+        sessions[i - 2].setFollowLocation(true);
+        sessions[i - 2].setUrl(argv[i]);
+    }
+
+    for(int j=1; j<=stats.nbRun; j++)
+    {
+        for(int i=2 ; i<argc; i++)
+            multiSession += sessions[i - 2];
+
+        fd_set readSet;
+        fd_set writeSet;
+        fd_set excepSet;
+        int    maxFd = -1;
+        int    nbReady;
+        struct timeval timeout;
+        struct timeval oldTimeout;
+
+        do
+        {
+            FD_ZERO(&readSet);
+            FD_ZERO(&writeSet);
+            FD_ZERO(&excepSet);
+            timeout = multiSession.getTimeout();
+            oldTimeout = timeout;
+
+            multiSession.getFileDescriptorsSet(&maxFd, &readSet, &writeSet, &excepSet);
+            if(maxFd == -1)
+            {
+                usleep(100000);
+                nbReady = -2;
+            }
+            else
+                nbReady = select(maxFd + 1, &readSet, &writeSet, &excepSet, &timeout);
+        
+            switch(nbReady)
+            {
+                case -1  :
+                    cerr << "Error on select() call : " << strerror(errno) << " (" << errno << ") [maxFd = " << maxFd << " " << timeout.tv_sec << "s " << setw(6) << timeout.tv_usec << "us]" << endl;
+                    return;
+                    break;
+                case 0  :
+                    /* No break */
+                default :
+                    multiSession.perform();
+                    break;
+            }
+        } while(multiSession.getSessionsRunning() > 0);
+
+        for(int i=2 ; i<argc; i++)
+        {
+            addSite(stats, argv[i], sessions[i - 2].getEffectiveUrl(), sessions[i - 2].getTotalTime());
+            multiSession -= sessions[i - 2];
+        }
+
+        if((j % ITER_MODULO) == 0)
+            cout << j << ' ' << flush;
+    }
+    cout << endl;
+
+    finalizeStatsCalculation(stats);
+    printStats(stats);
+    cout << endl;
+}
+
+void multipleSessionsIterations(int argc, char ** argv)
+{
+    StdOutputStream<ofstream> output("/dev/null");
+    Stats                     stats;
+
+    stats.nbRun             = atoi(argv[1]);
+    stats.initialUrlMaxSize = 0;
+    stats.finalUrlMaxSize   = 0;
+
+    cout << "###########################################" << endl;
+    cout << "# Multi interface (Parallel iterations)"     << endl;
+    cout << "###########################################" << endl;
+
+    
+    MultiSession multiSession;
+    for(int i=2 ; i<argc; i++)
+    {
+        cout << "Running \"" << argv[i] << '\"' << std::endl;
+
+        vector<HttpSession> sessions(stats.nbRun);
+        for(int j=1; j<=stats.nbRun; j++)
+        {
+            sessions[j - 1].setOutputStream(&output);
+            sessions[j - 1].setFollowLocation(true);
+            sessions[j - 1].setUrl(argv[i]);
+
+            multiSession += sessions[j - 1];
+        }
+
+        fd_set readSet;
+        fd_set writeSet;
+        fd_set excepSet;
+        int    maxFd = -1;
+        int    nbReady;
+        struct timeval timeout;
+        struct timeval oldTimeout;
+
+        do
+        {
+            FD_ZERO(&readSet);
+            FD_ZERO(&writeSet);
+            FD_ZERO(&excepSet);
+            timeout = multiSession.getTimeout();
+            oldTimeout = timeout;
+
+            multiSession.getFileDescriptorsSet(&maxFd, &readSet, &writeSet, &excepSet);
+            if(maxFd == -1)
+            {
+                usleep(100000);
+                nbReady = -2;
+            }
+            else
+                nbReady = select(maxFd + 1, &readSet, &writeSet, &excepSet, &timeout);
+        
+            switch(nbReady)
+            {
+                case -1  :
+                    cerr << "Error on select() call : " << strerror(errno) << " (" << errno << ") [maxFd = " << maxFd << " " << timeout.tv_sec << "s " << setw(6) << timeout.tv_usec << "us]" << endl;
+                    return;
+                    break;
+                case 0  :
+                    /* No break */
+                default :
+                    multiSession.perform();
+                    break;
+            }
+        } while(multiSession.getSessionsRunning() > 0);
+
+        for(int j=1; j<=stats.nbRun; j++)
+        {
+            addSite(stats, argv[i], sessions[j - 1].getEffectiveUrl(), sessions[j - 1].getTotalTime());
+            multiSession -= sessions[j - 1];
+        }
+    }
+
+    finalizeStatsCalculation(stats);
+    printStats(stats);
+    cout << endl;
+}
+
+int main(int argc, char ** argv)
+{
+    simpleSessions            (argc, argv);
+    multipleSessionsURLs      (argc, argv);
+    multipleSessionsIterations(argc, argv);
 
     return 0;
 }

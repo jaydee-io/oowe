@@ -62,6 +62,9 @@ class Session
         Session & operator =(const Session & rhs);
         Session & operator =(Session && rhs);
 
+        // Native type
+        operator CURL *(void);
+
         // URL encoding / decoding
         String escape  (const char * str, int len);
         String escape  (const std::string & str);

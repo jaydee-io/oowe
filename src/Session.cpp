@@ -76,6 +76,11 @@ Session & Session::operator =(Session && rhs)
     return *this;
 }
 
+Session::operator CURL *(void)
+{
+    return curl;
+}
+
 String Session::escape(const char * str, int len)
 {
     const char * escStr = curl_easy_escape(curl, str, len);
