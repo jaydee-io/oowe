@@ -19,12 +19,12 @@ using namespace oowe;
 
 struct Site
 {
-    string                  initialUrl;
-    string                  finalUrl;
-    list<Session::Duration> timeList;
+    string         initialUrl;
+    string         finalUrl;
+    list<Duration> timeList;
 
-    Session::Duration       average;
-    Session::Duration       standardDeviation;
+    Duration       average;
+    Duration       standardDeviation;
 };
 
 struct Stats
@@ -42,7 +42,7 @@ struct Stats
 
 #define PADDING 3
 
-string timeToString(Session::Duration & val)
+string timeToString(Duration & val)
 {
     ostringstream os;
     long long int longVal = static_cast<long long int>(val.count() * 1000000.0);
@@ -80,12 +80,12 @@ string timeToString(Session::Duration & val)
     return os.str();
 }
 
-Session::Duration operator *(Session::Duration & lhs, Session::Duration & rhs)
+Duration operator *(Duration & lhs, Duration & rhs)
 {
-    return Session::Duration(lhs.count() * rhs.count());
+    return Duration(lhs.count() * rhs.count());
 }
 
-void addSite(Stats & stats, const char * initialUrl, const char * finalUrl, Session::Duration && time)
+void addSite(Stats & stats, const char * initialUrl, const char * finalUrl, Duration && time)
 {
     auto siteIter = stats.sites.find(initialUrl);
 
@@ -117,8 +117,8 @@ void finalizeStatsCalculation(Stats & stats)
     for(auto & siteIter : stats.sites)
     {
         Site & site = siteIter.second;
-        site.average           = Session::Duration(site.average.count() / site.timeList.size());
-        site.standardDeviation = Session::Duration(sqrt((site.standardDeviation.count() / site.timeList.size()) - (site.average.count() * site.average.count())));
+        site.average           = Duration(site.average.count() / site.timeList.size());
+        site.standardDeviation = Duration(sqrt((site.standardDeviation.count() / site.timeList.size()) - (site.average.count() * site.average.count())));
     }
 }
 

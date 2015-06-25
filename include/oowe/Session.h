@@ -2,6 +2,7 @@
 #define __OOWE_SESSION__
 #include <curl/curl.h>
 #include <chrono>
+#include "oowe/oowe_types.h"
 #include "oowe/oowe_macros.h"
 #include "oowe/String.h"
 #include "oowe/OutputStream.h"
@@ -20,12 +21,12 @@
 #define GET_STRING(    method, info) GET(method, info, const char *, const char *       )
 #define GET_STRING_LST(method, info) GET(method, info, StringList,   struct curl_slist *)
 #define GET_DURATION(  method, info) \
-    inline Session::Duration get ## method(void) \
+    inline Duration get ## method(void) \
     { \
         return Duration(get<double>(CURLINFO_ ## info)); \
     }
 #define GET_TIME(      method, info) \
-    inline Session::Time get ## method(void) \
+    inline Time get ## method(void) \
     { \
         return Time(std::chrono::seconds(get<long>(CURLINFO_ ## info))); \
     }
@@ -35,23 +36,18 @@
     { \
         set<curlType>(CURLOPT_ ## opt, arg); \
     }
-#define SET_BOOL(      method, info) SET(method, info, bool,              long               )
-#define SET_LONG(      method, info) SET(method, info, long,              long               )
-#define SET_VOID(      method, info) SET(method, info, void *,            void *             )
-#define SET_FILE(      method, info) SET(method, info, FILE *,            FILE *             )
-#define SET_OFFSET(    method, info) SET(method, info, Session::offset_t, curl_off_t         )
-#define SET_STRING(    method, info) SET(method, info, const char *,      const char *       )
-#define SET_STRING_LST(method, info) SET(method, info, StringList &,      struct curl_slist *)
+#define SET_BOOL(      method, info) SET(method, info, bool,         long               )
+#define SET_LONG(      method, info) SET(method, info, long,         long               )
+#define SET_VOID(      method, info) SET(method, info, void *,       void *             )
+#define SET_FILE(      method, info) SET(method, info, FILE *,       FILE *             )
+#define SET_OFFSET(    method, info) SET(method, info, offset_t,     curl_off_t         )
+#define SET_STRING(    method, info) SET(method, info, const char *, const char *       )
+#define SET_STRING_LST(method, info) SET(method, info, StringList &, struct curl_slist *)
 
 namespace oowe {
 
 class Session
 {
-    public:
-        typedef curl_off_t                                                               offset_t;
-        typedef std::chrono::duration<double>                                            Duration; // In seconds
-        typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds> Time;     // In seconds
-
     public:
         Session(void);
         Session(const char * url);
