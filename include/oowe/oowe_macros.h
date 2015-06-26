@@ -45,6 +45,7 @@
 #define EASY_SET_STRING_LST(method, info) SET(method, CURLOPT_ ## info, StringList &, struct curl_slist *   )
 #define EASY_SET_HTTP_POST( method, info) SET(method, CURLOPT_ ## info, HttpPost &  , struct curl_httppost *)
 
-#define MULTI_SET_LONG(method, info) SET(method, CURLMOPT_ ## info, long, long)
+#define MULTI_SET_LONG(      method, info) SET(method, CURLMOPT_ ## info, long, long)
+#define MULTI_SET_STRING_LST(method, info) SET(method, CURLMOPT_ ## info, char **, char **)
 
 #endif /* __OOWE_MACROS__ */

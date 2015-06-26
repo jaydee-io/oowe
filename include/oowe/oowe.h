@@ -5,6 +5,7 @@
 #include <oowe/Session.h>
 #include <oowe/MultiSession.h>
 #include <oowe/HttpSession.h>
+#include <oowe/HttpMultiSession.h>
 #include <oowe/HttpPost.h>
 #include <oowe/StdOutputStream.h>
 #include <oowe/StdInputStream.h>

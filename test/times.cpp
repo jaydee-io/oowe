@@ -198,7 +198,9 @@ void multipleSessionsURLs(int argc, char ** argv)
     cout << "###########################################" << endl;
 
     
-    MultiSession        multiSession;
+    HttpMultiSession    multiSession;
+    multiSession.setPipelining(true);
+
     vector<HttpSession> sessions(argc - 2);
     for(int i=2 ; i<argc; i++)
     {
@@ -281,7 +283,9 @@ void multipleSessionsIterations(int argc, char ** argv)
     cout << "###########################################" << endl;
 
     
-    MultiSession multiSession;
+    HttpMultiSession multiSession;
+    multiSession.setPipelining(true);
+
     for(int i=2 ; i<argc; i++)
     {
         cout << "Running \"" << argv[i] << '\"' << std::endl;
