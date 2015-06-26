@@ -36,13 +36,14 @@
     { \
         set<curlType>(opt, arg); \
     }
-#define EASY_SET_BOOL(      method, info) SET(method, CURLOPT_ ## info, bool,         long               )
-#define EASY_SET_LONG(      method, info) SET(method, CURLOPT_ ## info, long,         long               )
-#define EASY_SET_VOID(      method, info) SET(method, CURLOPT_ ## info, void *,       void *             )
-#define EASY_SET_FILE(      method, info) SET(method, CURLOPT_ ## info, FILE *,       FILE *             )
-#define EASY_SET_OFFSET(    method, info) SET(method, CURLOPT_ ## info, offset_t,     curl_off_t         )
-#define EASY_SET_STRING(    method, info) SET(method, CURLOPT_ ## info, const char *, const char *       )
-#define EASY_SET_STRING_LST(method, info) SET(method, CURLOPT_ ## info, StringList &, struct curl_slist *)
+#define EASY_SET_BOOL(      method, info) SET(method, CURLOPT_ ## info, bool,         long                  )
+#define EASY_SET_LONG(      method, info) SET(method, CURLOPT_ ## info, long,         long                  )
+#define EASY_SET_VOID(      method, info) SET(method, CURLOPT_ ## info, void *,       void *                )
+#define EASY_SET_FILE(      method, info) SET(method, CURLOPT_ ## info, FILE *,       FILE *                )
+#define EASY_SET_OFFSET(    method, info) SET(method, CURLOPT_ ## info, offset_t,     curl_off_t            )
+#define EASY_SET_STRING(    method, info) SET(method, CURLOPT_ ## info, const char *, const char *          )
+#define EASY_SET_STRING_LST(method, info) SET(method, CURLOPT_ ## info, StringList &, struct curl_slist *   )
+#define EASY_SET_HTTP_POST( method, info) SET(method, CURLOPT_ ## info, HttpPost &  , struct curl_httppost *)
 
 #define MULTI_SET_LONG(method, info) SET(method, CURLMOPT_ ## info, long, long)
 

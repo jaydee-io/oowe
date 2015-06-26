@@ -7,7 +7,6 @@ LD=clang++
 ##########################################
 OBJS += src/String.o
 OBJS += src/Session.o
-OBJS += src/HttpSession.o
 OBJS += src/HttpPost.o
 OBJS += src/MultiSession.o
 
