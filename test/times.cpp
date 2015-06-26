@@ -351,11 +351,25 @@ void multipleSessionsIterations(int argc, char ** argv)
     cout << endl;
 }
 
+void printCurlInfos(void)
+{
+    cout << "##########################################"      << endl;
+    cout << "#   cURL version = \"" << oowe::version() << '"' << endl;
+    cout << "#"                                               << endl;
+    cout << oowe::version(CURLVERSION_NOW);
+    cout << "##########################################"      << endl;
+}
+
 int main(int argc, char ** argv)
 {
+    init(CURLVERSION_NOW);
+    printCurlInfos();
+
     simpleSessions            (argc, argv);
     multipleSessionsURLs      (argc, argv);
     multipleSessionsIterations(argc, argv);
+
+    cleanup();
 
     return 0;
 }

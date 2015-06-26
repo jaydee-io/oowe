@@ -6,6 +6,10 @@
     (LIBCURL_VERSION_MAJOR == major && LIBCURL_VERSION_MINOR >  minor) || \
     (LIBCURL_VERSION_MAJOR == major && LIBCURL_VERSION_MINOR == minor && LIBCURL_VERSION_PATCH >= patch))
 
+#define CURL_VERSION_MAJOR(version) ((unsigned int) ((version >> 16) & 0xFF))
+#define CURL_VERSION_MINOR(version) ((unsigned int) ((version >>  8) & 0xFF))
+#define CURL_VERSION_PATCH(version) ((unsigned int) ((version      ) & 0xFF))
+
 #define GET(method, info, methodType, curlType) \
     inline methodType get ## method(void) \
     { \

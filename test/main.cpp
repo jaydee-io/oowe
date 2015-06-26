@@ -157,8 +157,20 @@ void httpPostForm(oowe::HttpPost & post, oowe::HttpSession & session)
     session.setHttpPost(post);
 }
 
+void printCurlInfos(void)
+{
+    std::cout << "##########################################"      << std::endl;
+    std::cout << "#   cURL version = \"" << oowe::version() << '"' << std::endl;
+    std::cout << "#"                                               << std::endl;
+    std::cout << oowe::version(CURLVERSION_NOW);
+    std::cout << "##########################################"      << std::endl;
+}
+
 int main(int argc, char ** argv)
 {
+    oowe::init(CURLVERSION_NOW);
+    printCurlInfos();
+
     oowe::StdOutputStream<std::ofstream> output("/dev/null");
     oowe::StdInputStream <std::ifstream> input ("README.md");
     oowe::HttpSession session;
@@ -206,6 +218,8 @@ int main(int argc, char ** argv)
         std::cout << "END   Fetching \"" << session.getEffectiveUrl() << '"' << std::endl;
         std::cout << "***********************************************************************" << std::endl << std::endl;
     }
+
+    oowe::cleanup();
 
     return 0;
 }
