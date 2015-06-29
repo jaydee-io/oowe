@@ -153,8 +153,6 @@ class Session
         EASY_SET_STRING    (OAuth2BearerToken,             XOAUTH2_BEARER       ) // Set OAuth2 bearer token
 
         // Protocol options
-        EASY_SET_BOOL      (TransferText,                  TRANSFERTEXT         ) // Use text transfer [FTP]
-        EASY_SET_BOOL      (ProxyTransferMode,             PROXY_TRANSFER_MODE  ) // Add transfer mode to URL over proxy [FTP]
         EASY_SET_BOOL      (CrLf,                          CRLF                 ) // Convert newlines
         EASY_SET_STRING    (Range,                         RANGE                ) // Set range requests
         EASY_SET_LONG      (ResumeFrom,                    RESUME_FROM          ) // Set resume a transfer
@@ -223,7 +221,6 @@ class Session
         EASY_SET_STRING    (SslCipherList,                 SSL_CIPHER_LIST      ) // Set ciphers to use
         EASY_SET_BOOL      (SslSessionIdCache,             SSL_SESSIONID_CACHE  ) // Set disable SSL session-id cache
         EASY_SET_LONG      (SslOptions,                    SSL_OPTIONS          ) // Set control SSL behavior
-        EASY_SET_STRING    (KerberosLevel,                 KRBLEVEL             ) // Set kerberos security level [FTP]
 
         // Other options
         EASY_SET_VOID      (Private,                       PRIVATE              ) // Set private pointer to store
