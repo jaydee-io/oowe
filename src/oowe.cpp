@@ -53,7 +53,9 @@ std::ostream & operator <<(std::ostream & os, curl_version_info_data & info)
         os << PREFIX "Features =" << std::endl;
         CHECK_FEATURES(IPV6        , "Support IPv6"                             )
         CHECK_FEATURES(KERBEROS4   , "Support Kerberos V4 auth"                 )
+#if CURL_VERSION_GREATER(7, 40, 0)
         CHECK_FEATURES(KERBEROS5   , "Support Kerberos V5 auth"                 )
+#endif
         CHECK_FEATURES(SSL         , "Support SSL"                              )
         CHECK_FEATURES(LIBZ        , "Support libz"                             )
         CHECK_FEATURES(NTLM        , "Support NTLM auth"                        )
@@ -70,7 +72,9 @@ std::ostream & operator <<(std::ostream & os, curl_version_info_data & info)
         CHECK_FEATURES(NTLM_WB     , "Support NTLM delegation to winbind helper")
         CHECK_FEATURES(HTTP2       , "Support HTTP2"                            )
         CHECK_FEATURES(GSSAPI      , "GSS-API built"                            )
+#if CURL_VERSION_GREATER(7, 40, 0)
         CHECK_FEATURES(UNIX_SOCKETS, "Support Unix domain sockets"              )
+#endif
 
         os << PREFIX "SSL  Version  = \"" << info.ssl_version  << "\" / " << info.ssl_version_num << std::endl;
         os << PREFIX "libz Version  = \"" << info.libz_version << '"' << std::endl;
